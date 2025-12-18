@@ -1,73 +1,67 @@
-# React + TypeScript + Vite
+# Onchain Daily Check-In 🧭
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A multi-chain Web3 daily check-in app that lets users maintain on-chain streaks across EVM L2s.
 
-Currently, two official plugins are available:
+Built to explore **onchain identity, consistency, and reputation** — not farming gimmicks.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ What this does
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Daily check-in recorded **onchain**
+- Per-chain streak tracking (Base live)
+- Wallet-based identity (no accounts)
+- Clean, minimal UX for daily use
+- Lightweight market context (BTC / ETH / SOL prices)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🌐 Supported Chains
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Chain | Status |
+|------|-------|
+| Base | ✅ Live |
+| Unichain | ✅ Live |
+| World Chain | ✅ Live |
+| Soneium | ✅ Live |
+| Ink Chain | ✅ Live |
+| Otherchains | 🔜 Planned |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+> Each chain uses its **own deployed contract**.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🧠 How it works (technical)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Frontend:** Vite + React + TypeScript
+- **Wallet:** wagmi + WalletConnect
+- **Contracts:** Simple EVM smart contract
+- **Hosting:** Vercel
+- **Prices:** Off-chain API (CoinGecko)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Check-In Logic
+- One check-in allowed per wallet every 24 hours
+- Streak resets if a day is missed
+- All streaks are verifiable onchain
+
+  ## 📜 Smart Contracts
+
+| Chain       | Contract Address |
+|-------------|------------------|
+| Base        | `0x022BB2AFe3C6D08c49DDE9a9626392709924f749` |
+| Unichain    | `0x4dC49C82DFe8edd3aeE572301a407Dd1e082A276` |
+| World Chain | `0xb7e13f0dc8a4d8f68e47679119e7dc3730967bc7` |
+| Soneium     | `0x756c4C3C04F1FB55f60ec5606a79C1609e953502` |
+| Ink Chain   | `0xE1aB83c32030FA0718d969702EfdE455647cC24d` |
+
+        
+
+> Deployed from EOA, verified, and used directly by the frontend.
+
+---
+
+## 🚀 Live Demo
+
+👉 https://daily-onchain.vercel.app
+
+---

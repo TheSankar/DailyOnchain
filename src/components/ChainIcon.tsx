@@ -20,7 +20,7 @@ interface ChainIconProps {
 
 export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
     const { address, chain: currentChain, isConnected } = useAccount();
-    const { switchChain, isPending: isSwitching } = useSwitchChain();
+    const { switchChain } = useSwitchChain();
 
     // Local processing state to handle "switching to THIS chain" specifically
     const [isProcessing, setIsProcessing] = useState(false);

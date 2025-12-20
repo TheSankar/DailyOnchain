@@ -49,6 +49,44 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
         }
     });
 
+    // Read Last Check-in Time
+    const { data: lastCheckIn, refetch: refetchLastCheckIn } = useReadContract({
+        address: contractAddress,
+        abi: BaseCheckinABI,
+        functionName: 'getLastCheckIn',
+        args: address ? [address] : undefined,
+        chainId: chain.id,
+        query: {
+            enabled: isSupported && !!address,
+        }
+    });
+
+    const [timeLeft, setTimeLeft] = useState<string>('');
+
+    useEffect(() => {
+        if (!lastCheckIn || lastCheckIn === 0n) {
+            setTimeLeft('');
+            return;
+        }
+
+        const interval = setInterval(() => {
+            const now = Math.floor(Date.now() / 1000);
+            const nextCheckIn = Number(lastCheckIn) + 86400; // 24 hours
+            const diff = nextCheckIn - now;
+
+            if (diff <= 0) {
+                setTimeLeft('Available Now');
+                return;
+            }
+
+            const hours = Math.floor(diff / 3600);
+            const minutes = Math.floor((diff % 3600) / 60);
+            setTimeLeft(`Next in: ${hours}h ${minutes}m`);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [lastCheckIn]);
+
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
         hash: contractHash,
         chainId: chain.id, // Fix: Ensure we poll the receipt on the correct chain
@@ -58,6 +96,7 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
     useEffect(() => {
         if (isSuccess) {
             refetchStreak();
+            refetchLastCheckIn();
             playCheckinSound();
         }
     }, [isSuccess, refetchStreak]);
@@ -152,6 +191,11 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
                 <div className="text-lg font-medium text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400">
                     {chain.name}
                 </div>
+                {timeLeft && (
+                    <div className="text-sm font-bold text-indigo-200 mt-2 tracking-wide shadow-black drop-shadow-sm">
+                        {timeLeft}
+                    </div>
+                )}
             </div>
         </div>
     );

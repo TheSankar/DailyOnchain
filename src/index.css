@@ -7,3 +7,11 @@
     @apply bg-background text-white antialiased;
   }
 }
+
+.font-space {
+  font-family: 'Space Grotesk', sans-serif !important;
+}
+
+.font-inter {
+  font-family: 'Inter', sans-serif !important;
+}

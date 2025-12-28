@@ -15,14 +15,14 @@ contract DailyCheckIn {
 
     function checkIn() external {
         User storage user = _users[msg.sender];
-        uint256 nowTs = block.timestamp;
+        uint256 currentDay = block.timestamp / 86400;
 
         if (user.lastCheckIn != 0) {
-            if (nowTs < user.lastCheckIn + DAY) {
+            if (currentDay <= user.lastCheckIn) {
                 revert("Already checked in today");
             }
 
-            if (nowTs >= user.lastCheckIn + 2 * DAY) {
+            if (currentDay > user.lastCheckIn + 1) {
                 user.streak = 1;
             } else {
                 unchecked {
@@ -33,8 +33,8 @@ contract DailyCheckIn {
             user.streak = 1;
         }
 
-        user.lastCheckIn = uint48(nowTs);
-        emit CheckIn(msg.sender, user.streak, nowTs);
+        user.lastCheckIn = uint48(currentDay);
+        emit CheckIn(msg.sender, user.streak, block.timestamp);
     }
 
     function getStreak(address user) external view returns (uint256) {

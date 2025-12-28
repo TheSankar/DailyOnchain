@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        space: ['"Space Grotesk"', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+      },
       colors: {
         background: "#0f172a", // Dark slate
         surface: "#1e293b",

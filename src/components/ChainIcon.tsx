@@ -64,15 +64,27 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
     const [timeLeft, setTimeLeft] = useState<string>('');
 
     useEffect(() => {
-        if (!lastCheckIn || lastCheckIn === 0n) {
-            setTimeLeft('');
+        // If never checked in, it's available
+        if (!lastCheckIn && lastCheckIn !== 0n) {
+            setTimeLeft('Available Now');
             return;
         }
 
         const interval = setInterval(() => {
-            const now = Math.floor(Date.now() / 1000);
-            const nextCheckIn = Number(lastCheckIn) + 86400; // 24 hours
-            const diff = nextCheckIn - now;
+            const nowSeconds = Math.floor(Date.now() / 1000);
+            const currentDayIndex = Math.floor(nowSeconds / 86400);
+            const lastCheckInIndex = Number(lastCheckIn);
+
+            // If user hasn't checked in today (or ever), it's available
+            // Note: lastCheckIn 0 means never checked in
+            if (lastCheckIn === 0n || lastCheckInIndex < currentDayIndex) {
+                setTimeLeft('Available Now');
+                return;
+            }
+
+            // If checked in today, next check-in is tomorrow UTC midnight
+            const nextMidnight = (currentDayIndex + 1) * 86400;
+            const diff = nextMidnight - nowSeconds;
 
             if (diff <= 0) {
                 setTimeLeft('Available Now');
@@ -81,7 +93,8 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
 
             const hours = Math.floor(diff / 3600);
             const minutes = Math.floor((diff % 3600) / 60);
-            setTimeLeft(`Next in: ${hours}h ${minutes}m`);
+            const seconds = diff % 60;
+            setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
         }, 1000);
 
         return () => clearInterval(interval);
@@ -137,7 +150,7 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
                     whileTap={!isDisabled ? { scale: 0.9 } : {}}
                     transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     className={twMerge(
-                        "relative w-40 h-40 rounded-full border-[4px] flex items-center justify-center bg-black/40 backdrop-blur-md",
+                        "relative w-[136px] h-[136px] rounded-full border-[4px] flex items-center justify-center bg-black/40 backdrop-blur-md",
                         borderColor,
                         isSupported ? "opacity-100 shadow-xl" : "opacity-40 grayscale cursor-not-allowed",
                         isPending && "animate-pulse border-yellow-500",
@@ -151,7 +164,7 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                                 className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full z-20"
                             >
-                                <Loader2 className="w-12 h-12 text-white animate-spin" />
+                                <Loader2 className="w-10 h-10 text-white animate-spin" />
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -163,15 +176,15 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
                                 initial={{ scale: 0, opacity: 0, rotate: -45 }}
                                 animate={{ scale: 1, opacity: 1, rotate: 0 }}
                                 transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                                className="absolute -bottom-2 -right-2 flex items-center justify-center w-12 h-12 bg-green-500 rounded-full z-30 ring-4 ring-[#0a0b1e] shadow-lg"
+                                className="absolute -bottom-2 -right-2 flex items-center justify-center w-10 h-10 bg-green-500 rounded-full z-30 ring-4 ring-[#0a0b1e] shadow-lg"
                             >
-                                <Check className="w-8 h-8 text-white" strokeWidth={4} />
+                                <Check className="w-6 h-6 text-white" strokeWidth={4} />
                             </motion.div>
                         )}
                     </AnimatePresence>
 
                     {/* Image - Massive sizing */}
-                    <div className="w-28 h-28 flex items-center justify-center z-10">
+                    <div className="w-24 h-24 flex items-center justify-center z-10">
                         <img
                             src={iconUrl}
                             alt={chain.name}
@@ -185,14 +198,14 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
             </div>
 
             <div className="text-center transition-all duration-300 group-hover:transform group-hover:translate-y-1">
-                <div className="text-[10px] font-bold text-gray-400 mb-1 tracking-[0.2em] uppercase">
+                <div className="text-[10px] font-bold text-gray-400 mb-1 tracking-[0.2em] uppercase font-inter">
                     {(streak !== undefined && isSupported) ? `${streak.toString()} DAYS STREAK` : '0 DAYS STREAK'}
                 </div>
                 <div className="text-lg font-medium text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400">
                     {chain.name}
                 </div>
                 {timeLeft && (
-                    <div className="text-sm font-bold text-indigo-200 mt-2 tracking-wide shadow-black drop-shadow-sm">
+                    <div className="text-sm font-bold text-indigo-300 mt-1 tracking-wider drop-shadow-md font-inter">
                         {timeLeft}
                     </div>
                 )}

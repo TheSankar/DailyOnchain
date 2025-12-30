@@ -70,34 +70,22 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
             return;
         }
 
-        const interval = setInterval(() => {
-            const nowSeconds = Math.floor(Date.now() / 1000);
-            const currentDayIndex = Math.floor(nowSeconds / 86400);
-            const lastCheckInIndex = Number(lastCheckIn);
+        const nowSeconds = Math.floor(Date.now() / 1000);
+        const currentDayIndex = Math.floor(nowSeconds / 86400);
 
-            // If user hasn't checked in today (or ever), it's available
-            // Note: lastCheckIn 0 means never checked in
-            if (lastCheckIn === 0n || lastCheckInIndex < currentDayIndex) {
-                setTimeLeft('Available Now');
-                return;
-            }
+        // Handle potential timestamp vs day index
+        let lastCheckInIndex = Number(lastCheckIn);
+        if (lastCheckInIndex > 100000) {
+            lastCheckInIndex = Math.floor(lastCheckInIndex / 86400);
+        }
 
-            // If checked in today, next check-in is tomorrow UTC midnight
-            const nextMidnight = (currentDayIndex + 1) * 86400;
-            const diff = nextMidnight - nowSeconds;
-
-            if (diff <= 0) {
-                setTimeLeft('Available Now');
-                return;
-            }
-
-            const hours = Math.floor(diff / 3600);
-            const minutes = Math.floor((diff % 3600) / 60);
-            const seconds = diff % 60;
-            setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
-        }, 1000);
-
-        return () => clearInterval(interval);
+        // If user hasn't checked in today (or ever), it's available
+        // Note: lastCheckIn 0 means never checked in
+        if (lastCheckIn === 0n || lastCheckInIndex < currentDayIndex) {
+            setTimeLeft('Available Now');
+        } else {
+            setTimeLeft('Already checked-in');
+        }
     }, [lastCheckIn]);
 
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
@@ -198,14 +186,15 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
             </div>
 
             <div className="text-center transition-all duration-300 group-hover:transform group-hover:translate-y-1">
-                <div className="text-[10px] font-bold text-gray-400 mb-1 tracking-[0.2em] uppercase font-inter">
+                <div className="text-sm font-bold text-white mb-2 tracking-widest uppercase font-inter drop-shadow-md">
                     {(streak !== undefined && isSupported) ? `${streak.toString()} DAYS STREAK` : '0 DAYS STREAK'}
                 </div>
-                <div className="text-lg font-medium text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400">
-                    {chain.name}
-                </div>
+
                 {timeLeft && (
-                    <div className="text-sm font-bold text-indigo-300 mt-1 tracking-wider drop-shadow-md font-inter">
+                    <div className={twMerge(
+                        "text-sm font-bold mt-1 tracking-wider drop-shadow-md font-inter",
+                        timeLeft === 'Available Now' ? "text-green-400" : "text-indigo-300"
+                    )}>
                         {timeLeft}
                     </div>
                 )}

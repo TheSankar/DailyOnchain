@@ -138,7 +138,7 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
                     whileTap={!isDisabled ? { scale: 0.9 } : {}}
                     transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     className={twMerge(
-                        "relative w-[136px] h-[136px] rounded-full border-[4px] flex items-center justify-center bg-black/40 backdrop-blur-md",
+                        "relative w-[136px] h-[136px] rounded-full border-[4px] flex items-center justify-center bg-black/40 backdrop-blur-md overflow-hidden",
                         borderColor,
                         isSupported ? "opacity-100 shadow-xl" : "opacity-40 grayscale cursor-not-allowed",
                         isPending && "animate-pulse border-yellow-500",

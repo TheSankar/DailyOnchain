@@ -114,12 +114,12 @@ function DailyCheckin() {
                     rel="noopener noreferrer"
                     className="pointer-events-auto text-gray-500 hover:text-white text-xs font-medium tracking-widest transition-colors opacity-70 hover:opacity-100"
                 >
-                    -- Created by Sankar 💚 --
+                    -- Created by Sankar  --
                 </a>
             </div>
 
             {/* Ticker - Bottom Left */}
-            <div className="absolute bottom-6 left-6 z-20 hidden md:block">
+            <div className="absolute top-6 left-6 z-20 hidden md:block">
                 <CryptoTicker />
             </div>
         </div>

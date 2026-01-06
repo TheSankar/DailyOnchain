@@ -53,15 +53,17 @@ export function CryptoTicker() {
     ];
 
     return (
-        <div className="flex gap-4 p-3 rounded-2xl bg-black/30 backdrop-blur-md border border-white/10 animate-fade-in-up">
+        <div className="flex flex-col gap-3 p-4 rounded-2xl bg-black/30 backdrop-blur-md border border-white/10 animate-fade-in-up">
             {coins.map((coin) => {
                 if (!coin.data) return null;
                 const isPositive = coin.data.usd_24h_change >= 0;
 
                 return (
-                    <div key={coin.id} className="flex items-center gap-2 text-xs md:text-sm font-medium">
-                        <span className="text-gray-400 font-bold">{coin.symbol}</span>
-                        <span className="text-white">${coin.data.usd.toLocaleString()}</span>
+                    <div key={coin.id} className="flex items-center justify-between gap-4 text-xs md:text-sm font-medium w-full">
+                        <div className="flex items-center gap-2">
+                            <span className="text-gray-400 font-bold w-8">{coin.symbol}</span>
+                            <span className="text-white">${coin.data.usd.toLocaleString()}</span>
+                        </div>
                         <div className={clsx(
                             "flex items-center gap-0.5",
                             isPositive ? "text-green-400" : "text-red-400"
@@ -69,8 +71,6 @@ export function CryptoTicker() {
                             {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                             <span>{Math.abs(coin.data.usd_24h_change).toFixed(1)}%</span>
                         </div>
-                        {/* Divider */}
-                        {coin.id !== 'solana' && <div className="w-[1px] h-3 bg-white/20 ml-2" />}
                     </div>
                 );
             })}

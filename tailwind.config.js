@@ -11,7 +11,7 @@ export default {
         inter: ['Inter', 'sans-serif'],
       },
       colors: {
-        background: "#0f172a", // Dark slate
+        background: "#080918", // Slightly Darker Midnight
         surface: "#1e293b",
         primary: "#3b82f6", // Blue
         secondary: "#8b5cf6", // Violet

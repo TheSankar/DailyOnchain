@@ -4,7 +4,9 @@
 
 @layer base {
   body {
-    @apply bg-background text-white antialiased;
+    @apply text-white antialiased;
+    background: radial-gradient(circle at 50% 30%, #1a1f35 0%, #0a0b1e 50%, #020205 100%);
+    background-attachment: fixed;
   }
 }
 

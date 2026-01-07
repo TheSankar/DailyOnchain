@@ -64,28 +64,52 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
     const [timeLeft, setTimeLeft] = useState<string>('');
 
     useEffect(() => {
-        // If never checked in, it's available
-        if (!lastCheckIn && lastCheckIn !== 0n) {
-            setTimeLeft('Available Now');
-            return;
-        }
+        const updateStatus = () => {
+            // If never checked in (and not failed/loading 0n check), show available
+            if (!lastCheckIn && lastCheckIn !== 0n) {
+                setTimeLeft('Available Now');
+                return;
+            }
 
-        const nowSeconds = Math.floor(Date.now() / 1000);
-        const currentDayIndex = Math.floor(nowSeconds / 86400);
+            const nowSeconds = Math.floor(Date.now() / 1000);
+            const currentDayIndex = Math.floor(nowSeconds / 86400);
 
-        // Handle potential timestamp vs day index
-        let lastCheckInIndex = Number(lastCheckIn);
-        if (lastCheckInIndex > 100000) {
-            lastCheckInIndex = Math.floor(lastCheckInIndex / 86400);
-        }
+            // Handle potential timestamp vs day index
+            let lastCheckInIndex = Number(lastCheckIn);
+            let checkInTimestamp = 0;
 
-        // If user hasn't checked in today (or ever), it's available
-        // Note: lastCheckIn 0 means never checked in
-        if (lastCheckIn === 0n || lastCheckInIndex < currentDayIndex) {
-            setTimeLeft('Available Now');
-        } else {
-            setTimeLeft('Already checked-in');
-        }
+            if (lastCheckInIndex > 100000) {
+                checkInTimestamp = lastCheckInIndex;
+                lastCheckInIndex = Math.floor(lastCheckInIndex / 86400);
+            }
+
+            // If user hasn't checked in today (or ever), it's available
+            if (lastCheckIn === 0n || lastCheckInIndex < currentDayIndex) {
+                setTimeLeft('Available Now');
+            } else {
+                // User checked in today. Show how long ago if we have timestamp.
+                if (checkInTimestamp > 0) {
+                    const elapsed = nowSeconds - checkInTimestamp;
+                    if (elapsed < 60) {
+                        setTimeLeft('Just now');
+                    } else if (elapsed < 3600) {
+                        const m = Math.floor(elapsed / 60);
+                        setTimeLeft(`${m}m ago`);
+                    } else {
+                        const h = Math.floor(elapsed / 3600);
+                        const m = Math.floor((elapsed % 3600) / 60);
+                        setTimeLeft(`${h}h ${m}m ago`);
+                    }
+                } else {
+                    // Fallback if we only have index (rare): show checked in
+                    setTimeLeft('Checked In');
+                }
+            }
+        };
+
+        updateStatus();
+        const interval = setInterval(updateStatus, 60000); // Update every minute
+        return () => clearInterval(interval);
     }, [lastCheckIn]);
 
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
@@ -138,7 +162,7 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
                     whileTap={!isDisabled ? { scale: 0.9 } : {}}
                     transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     className={twMerge(
-                        "relative w-[136px] h-[136px] rounded-full border-[4px] flex items-center justify-center bg-black/40 backdrop-blur-md overflow-hidden",
+                        "relative w-[143px] h-[143px] rounded-full border-[4px] flex items-center justify-center bg-black/40 backdrop-blur-md overflow-hidden",
                         borderColor,
                         isSupported ? "opacity-100 shadow-xl" : "opacity-40 grayscale cursor-not-allowed",
                         isPending && "animate-pulse border-yellow-500",
@@ -164,7 +188,7 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
                                 initial={{ scale: 0, opacity: 0, rotate: -45 }}
                                 animate={{ scale: 1, opacity: 1, rotate: 0 }}
                                 transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                                className="absolute -bottom-2 -right-2 flex items-center justify-center w-10 h-10 bg-green-500 rounded-full z-30 ring-4 ring-[#0a0b1e] shadow-lg"
+                                className="absolute -bottom-2 -right-2 flex items-center justify-center w-10 h-10 bg-green-500 rounded-full z-30 ring-4 ring-background shadow-lg"
                             >
                                 <Check className="w-6 h-6 text-white" strokeWidth={4} />
                             </motion.div>
@@ -172,7 +196,7 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
                     </AnimatePresence>
 
                     {/* Image - Massive sizing */}
-                    <div className="w-24 h-24 flex items-center justify-center z-10">
+                    <div className="w-[100px] h-[100px] flex items-center justify-center z-10">
                         <img
                             src={iconUrl}
                             alt={chain.name}

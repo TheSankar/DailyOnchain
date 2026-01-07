@@ -16,7 +16,11 @@ interface MarketData {
 const COIN_IDS = 'bitcoin,ethereum,solana';
 const API_URL = `https://api.coingecko.com/api/v3/simple/price?ids=${COIN_IDS}&vs_currencies=usd&include_24hr_change=true`;
 
-export function CryptoTicker() {
+interface CryptoTickerProps {
+    className?: string;
+}
+
+export function CryptoTicker({ className }: CryptoTickerProps) {
     const [prices, setPrices] = useState<MarketData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -53,13 +57,13 @@ export function CryptoTicker() {
     ];
 
     return (
-        <div className="flex flex-col gap-3 p-4 rounded-2xl bg-black/30 backdrop-blur-md border border-white/10 animate-fade-in-up">
+        <div className={clsx("flex flex-col gap-4 p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg w-full", className)}>
             {coins.map((coin) => {
                 if (!coin.data) return null;
                 const isPositive = coin.data.usd_24h_change >= 0;
 
                 return (
-                    <div key={coin.id} className="flex items-center justify-between gap-4 text-xs md:text-sm font-medium w-full">
+                    <div key={coin.id} className="flex items-center justify-between gap-4 text-sm md:text-base font-medium w-full">
                         <div className="flex items-center gap-2">
                             <span className="text-gray-400 font-bold w-8">{coin.symbol}</span>
                             <span className="text-white">${coin.data.usd.toLocaleString()}</span>

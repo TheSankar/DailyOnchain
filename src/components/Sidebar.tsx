@@ -67,7 +67,7 @@ export function Sidebar({ activeCategory, setActiveCategory }: SidebarProps) {
                     >
                         <div className="h-full flex items-center justify-between px-6 relative z-10">
                             <span className={clsx(
-                                "text-4xl font-space font-bold tracking-wide transition-all duration-300",
+                                "text-[32px] font-space font-bold tracking-wide transition-all duration-300",
                                 activeCategory === cat.id ? "text-white translate-x-4" : "text-gray-400 group-hover:text-white group-hover:translate-x-2"
                             )}>
                                 {cat.label}

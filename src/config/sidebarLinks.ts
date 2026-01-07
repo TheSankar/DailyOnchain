@@ -40,7 +40,7 @@ export const socials: LinkItem[] = [
     { name: 'Farcaster', url: 'https://farcaster.xyz/', icon: farcasterImg },
     { name: 'Discord', url: 'https://discord.com', icon: discordImg },
     { name: 'Instagram', url: 'https://www.instagram.com', icon: instagramImg },
-    { name: 'Discord (Alt)', url: 'https://discord.com', icon: discordImg },
+    { name: 'DeBank', url: 'https://debank.com', icon: debankImg },
     { name: 'X', url: 'https://x.com', icon: xImg },
     { name: 'Reddit', url: 'https://www.reddit.com', icon: redditImg },
     { name: 'Superboard', url: 'https://superboard.xyz', icon: superboardImg },
@@ -50,7 +50,6 @@ export const socials: LinkItem[] = [
 export const tools: LinkItem[] = [
     { name: 'ChatGPT', url: 'https://chat.openai.com', icon: chatgptImg },
     { name: 'Dexscreener', url: 'https://dexscreener.com', icon: dexscreenerImg },
-    { name: 'DeBank', url: 'https://debank.com', icon: debankImg },
     { name: 'CoinMarketCap', url: 'https://www.coinmarketcap.com', icon: cmcImg },
     { name: 'Dune', url: 'https://dune.com', icon: duneImg },
     { name: 'DefiLlama', url: 'https://defillama.com', icon: defillamaImg },

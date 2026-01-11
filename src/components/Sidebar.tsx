@@ -49,12 +49,12 @@ export function Sidebar({ activeCategory, setActiveCategory }: SidebarProps) {
         <div className="flex flex-col h-full w-full bg-transparent p-6 gap-6 font-sans pointer-events-auto">
 
             {/* SECTION 1: MARKET */}
-            <div className="flex-1 min-h-0 bg-[#0a0f23]/45 backdrop-blur-md border border-white/5 rounded-[24px] overflow-hidden relative shadow-2xl flex flex-col pt-6">
+            <div className="flex-none bg-[#0a0f23]/45 backdrop-blur-md border border-white/5 rounded-[24px] overflow-hidden relative shadow-2xl flex flex-col pt-6">
                 <CryptoTicker className="!bg-transparent !border-none !shadow-none !p-6 !gap-4" />
             </div>
 
             {/* SECTION 2: LAUNCHER */}
-            <div className="flex-[2] min-h-0 bg-[#0a0f23]/45 backdrop-blur-md border border-white/5 rounded-[24px] flex flex-col overflow-hidden shadow-2xl">
+            <div className="flex-1 min-h-0 bg-[#0a0f23]/45 backdrop-blur-md border border-white/5 rounded-[24px] flex flex-col overflow-hidden shadow-2xl">
                 {categories.map((cat) => (
                     <button
                         key={cat.id}
@@ -84,7 +84,7 @@ export function Sidebar({ activeCategory, setActiveCategory }: SidebarProps) {
             </div>
 
             {/* SECTION 3: TIME */}
-            <div className="flex-1 min-h-0 bg-[#0a0f23]/45 backdrop-blur-md border border-white/5 rounded-[24px] p-6 flex flex-col justify-center items-center shadow-2xl relative overflow-hidden">
+            <div className="flex-none bg-[#0a0f23]/45 backdrop-blur-md border border-white/5 rounded-[24px] p-6 flex flex-col justify-center items-center shadow-2xl relative overflow-hidden">
                 {/* Digital Clock aesthetic */}
                 <div className="flex flex-col gap-6 w-full opacity-90">
                     {/* IST */}

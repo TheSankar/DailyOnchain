@@ -65,44 +65,48 @@ export function ChainIcon({ chain, iconUrl, borderColor }: ChainIconProps) {
 
     useEffect(() => {
         const updateStatus = () => {
-            // If never checked in (and not failed/loading 0n check), show available
-            if (!lastCheckIn && lastCheckIn !== 0n) {
+            // If never checked in
+            if (lastCheckIn === 0n) {
                 setTimeLeft('Available Now');
                 return;
             }
 
             const nowSeconds = Math.floor(Date.now() / 1000);
-            const currentDayIndex = Math.floor(nowSeconds / 86400);
+            const lastCheckInVal = Number(lastCheckIn);
 
-            // Handle potential timestamp vs day index
-            let lastCheckInIndex = Number(lastCheckIn);
-            let checkInTimestamp = 0;
+            // Case 1: lastCheckIn is a Timestamp (e.g. > 2020)
+            if (lastCheckInVal > 1577836800) {
+                const elapsed = nowSeconds - lastCheckInVal;
+                const window = 86400; // 24 hours
 
-            if (lastCheckInIndex > 100000) {
-                checkInTimestamp = lastCheckInIndex;
-                lastCheckInIndex = Math.floor(lastCheckInIndex / 86400);
-            }
-
-            // If user hasn't checked in today (or ever), it's available
-            if (lastCheckIn === 0n || lastCheckInIndex < currentDayIndex) {
-                setTimeLeft('Available Now');
-            } else {
-                // User checked in today. Show how long ago if we have timestamp.
-                if (checkInTimestamp > 0) {
-                    const elapsed = nowSeconds - checkInTimestamp;
-                    if (elapsed < 60) {
-                        setTimeLeft('Just now');
-                    } else if (elapsed < 3600) {
-                        const m = Math.floor(elapsed / 60);
-                        setTimeLeft(`${m}m ago`);
-                    } else {
-                        const h = Math.floor(elapsed / 3600);
-                        const m = Math.floor((elapsed % 3600) / 60);
-                        setTimeLeft(`${h}h ${m}m ago`);
-                    }
+                if (elapsed < window) {
+                    const remaining = window - elapsed;
+                    const h = Math.floor(remaining / 3600);
+                    const m = Math.floor((remaining % 3600) / 60);
+                    const mStr = m < 10 ? `0${m}` : m;
+                    setTimeLeft(`${h}:${mStr} left`);
                 } else {
-                    // Fallback if we only have index (rare): show checked in
-                    setTimeLeft('Checked In');
+                    setTimeLeft('Available Now');
+                }
+            }
+            // Case 2: lastCheckIn is a Day Index (legacy support)
+            else {
+                const currentDayIndex = Math.floor(nowSeconds / 86400);
+                if (lastCheckInVal < currentDayIndex) {
+                    setTimeLeft('Available Now');
+                } else {
+                    // Check-in for today is done (midnight reset fallback)
+                    const nextDayTimestamp = (currentDayIndex + 1) * 86400;
+                    const secondsUntilReset = nextDayTimestamp - nowSeconds;
+
+                    if (secondsUntilReset > 0) {
+                        const h = Math.floor(secondsUntilReset / 3600);
+                        const m = Math.floor((secondsUntilReset % 3600) / 60);
+                        const mStr = m < 10 ? `0${m}` : m;
+                        setTimeLeft(`${h}:${mStr} left`);
+                    } else {
+                        setTimeLeft('Available Now');
+                    }
                 }
             }
         };

@@ -78,14 +78,14 @@ function DailyCheckin() {
                         <div className="flex w-full min-h-screen relative bg-transparent overflow-hidden">
 
                             {/* Left Sidebar Rail - Floating */}
-                            <div className="hidden md:block fixed left-0 top-0 bottom-0 p-6 z-50 h-screen w-[320px] pointer-events-none">
+                            <div className="hidden md:block fixed left-0 top-0 bottom-0 p-6 z-50 h-[133.33vh] w-[320px] pointer-events-none">
                                 <div className="pointer-events-auto h-full w-full">
                                     <Sidebar activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
                                 </div>
                             </div>
 
                             {/* Main Content Area - True Center (No sidebar offset) */}
-                            <div className="flex-1 flex flex-col items-center justify-center w-full min-h-screen relative p-0 z-30">
+                            <div className="flex-1 flex flex-col items-center justify-center w-full min-h-[133.33vh] relative p-0 z-30">
 
                                 <div className="fixed top-6 right-6 z-50">
                                     <ConnectButton chainStatus="none" showBalance={false} />
@@ -151,12 +151,12 @@ function DailyCheckin() {
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-6 text-center z-20 pointer-events-none w-full">
+            <div className="absolute bottom-4 text-center z-20 pointer-events-none w-full">
                 <a
                     href="https://x.com/Thesankarg"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="pointer-events-auto text-gray-500 hover:text-white text-xs font-medium tracking-widest transition-colors opacity-70 hover:opacity-100"
+                    className="pointer-events-auto text-gray-500 hover:text-white text-xs font-medium tracking-widest transition-colors opacity-50 hover:opacity-100"
                 >
                     -- Created by Sankar  --
                 </a>

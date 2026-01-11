@@ -7,6 +7,7 @@
     @apply text-white antialiased;
     background: radial-gradient(circle at 50% 30%, #1a1f35 0%, #0a0b1e 50%, #020205 100%);
     background-attachment: fixed;
+    zoom: 0.75;
   }
 }
 

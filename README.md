@@ -1,4 +1,4 @@
-# Onchain Daily Check-In 🧭
+# Onchain-toolkit 🧭
 
 A multi-chain Web3 daily check-in app that lets users maintain on-chain streaks across EVM L2s.
 
